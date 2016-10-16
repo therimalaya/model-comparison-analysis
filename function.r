@@ -76,13 +76,14 @@ fit_model <- function(sim_obj, method = c(), ...){
     return(res)
 }
 
-get_fitted <- function(mdl, ncomp = 10, ...){
+get_fitted <- function(sim_obj, mdl, ncomp = 10, ...){
+    if (class(sim_obj) != "simrel") stop("wrong sim_obj")
     if (mdl == "linear")
-        fit_model(sim_obj$obj[[1]], mdl, ...)
+        fit_model(sim_obj, mdl, ...)
     else if (mdl != "bayes")
-        fit_model(sim_obj$obj[[1]], mdl, ncomp = ncomp, ...)
+        fit_model(sim_obj, mdl, ncomp = ncomp, ...)
     else
-        fit_model(sim_obj$obj[[1]], mdl, ncomp = ncomp, scale = FALSE,
+        fit_model(sim_obj, mdl, ncomp = ncomp, scale = FALSE,
                       dotrace = FALSE, totiter = 50000, freeze = 0.01,
                       compreduce = FALSE, thin = 50, burn = 5000, ...)
 }
