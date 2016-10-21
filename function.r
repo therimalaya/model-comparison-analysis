@@ -1,3 +1,4 @@
+## ---- Convert character into list -----------------------------------------------
 parseText <- function(x) {
     evl <- function(x) as.numeric(unlist(strsplit(x, split = ",")))
     out <- lapply(strsplit(x, ";")[[1]], evl)
@@ -5,10 +6,11 @@ parseText <- function(x) {
     return(out[[1]])
 }
 
-sim_rep <- function(design_parm, nrep = 5, min_lambda = 1e-4){
+## ---- Simulation Function -----------------------------------------------
+sim_rep <- function(design_parm, nrep = 5, min_lambda = 1e-4, ntest = 5000){
     design_parm <- append(
         design_parm,
-        c(lambda.min = min_lambda)
+        c(lambda.min = min_lambda, ntest = ntest)
     )
     sim_obj <- lapply(1:nrep, function(x){
         set.seed(7777)
@@ -17,6 +19,7 @@ sim_rep <- function(design_parm, nrep = 5, min_lambda = 1e-4){
     return(sim_obj)
 }
 
+## ---- Load Object if exist -----------------------------------------------
 load_if_not <- function(obj_name, obj_path = ".", expression){
     full_path <- paste(file.path(obj_path, obj_name), "rds", sep = ".")
     if (file.exists(full_path)) {
@@ -27,13 +30,15 @@ load_if_not <- function(obj_name, obj_path = ".", expression){
     }
 }
 
-linear_fit <- function(sim_obj, ...) {
+## ---- Oridinary List Square Fit -----------------------------------------------
+ols_fit <- function(sim_obj, ...) {
     if (class(sim_obj) != "simrel") stop("wrong sim_obj")
     train <- data.frame(x = I(sim_obj$X), y = I(sim_obj$Y))
     fit <- lm(y ~ x, data = train, ...)
     return(fit)
 }
 
+## ---- PCR or PLS model Fit -----------------------------------------------
 mvr_fit <- function(sim_obj, mvr_fun = "pcr", ncomp = 10, ...) {
     if (class(sim_obj) != "simrel") stop("wrong sim_obj")
     train <- data.frame(x = I(sim_obj$X), y = I(sim_obj$Y))
@@ -41,6 +46,7 @@ mvr_fit <- function(sim_obj, mvr_fun = "pcr", ncomp = 10, ...) {
     return(fit)
 }
 
+## ---- Envelope Model Fit -----------------------------------------------
 env_fit <- function(sim_obj, ncomp = 10, ...){
     if (class(sim_obj) != "simrel") stop("wrong sim_obj")
     train <- data.frame(x = I(sim_obj$X), y = I(sim_obj$Y))
@@ -52,6 +58,7 @@ env_fit <- function(sim_obj, ncomp = 10, ...){
     return(fit)
 }
 
+## ---- BayesPLS model fit -----------------------------------------------
 bayes_fit <- function(sim_obj, ncomp = 2, ...){
     if (class(sim_obj) != "simrel") stop("wrong sim_obj")
     train <- data.frame(x = I(sim_obj$X), y = I(sim_obj$Y))
@@ -64,81 +71,93 @@ bayes_fit <- function(sim_obj, ncomp = 2, ...){
     return(fit)
 }
 
-fit_model <- function(sim_obj, method = c(), ...){
-    if (class(sim_obj) != "simrel") stop("wrong sim_obj")
-    method <- match.arg(method, c("linear", "pcr", "plsr", "envelope", "bayes"))
-    res <- switch(method,
-           linear = linear_fit(sim_obj, ...),
-           pcr = mvr_fit(sim_obj, mvr_fun = "pcr", ...),
-           plsr = mvr_fit(sim_obj, mvr_fun = "plsr", ...),
-           envelope = env_fit(sim_obj, ...),
-           bayes = bayes_fit(sim_obj, ...))
-    return(res)
+## ---- Bind list of object into data.table -----------------------------------------------
+bind_obj <- function(obj){
+    dt <- rbindlist(lapply(obj, data.table), idcol = TRUE)
+    setnames(dt, c("V1", ".id"), c("obj", "design"))
+    dt[, rep := 1:.N, by = design]
+    setcolorder(dt, c("design", "rep", "obj"))
+    setkeyv(dt, c("design", "rep"))
+    return(dt[])
 }
 
-get_fitted <- function(sim_obj, mdl, ncomp = 10, ...){
-    if (class(sim_obj) != "simrel") stop("wrong sim_obj")
-    if (mdl == "linear")
-        fit_model(sim_obj, mdl, ...)
-    else if (mdl != "bayes")
-        fit_model(sim_obj, mdl, ncomp = ncomp, ...)
-    else
-        fit_model(sim_obj, mdl, ncomp = ncomp, scale = FALSE,
-                      dotrace = FALSE, totiter = 50000, freeze = 0.01,
-                      compreduce = FALSE, thin = 50, burn = 5000, ...)
-}
-
+## ---- Beta Function Generator for different Models -----------------------------------------------
 get_beta <- function(model = c('pcr', 'pls', 'mvr', 'envelope', 'bayes', 'linear',
-                              'try-error', "list", "lm", "lmm", "BayesPLS")){
+                              'try-error', "list", "lm", "lmm", "BayesPLS", "ols")){
   model <- match.arg(model)
-  ## Start Making some Expression
+
   if (model %in% c('pcr', 'pls')) model <- 'mvr'
   if (model %in% c('BayesPLS')) model <- "bayes"
-  if (model %in% c("lm", "lmm")) model <- "linear"
+  if (model %in% c("lm", "lmm", "ols")) model <- "ols"
   if (model %in% c("list")) model <- "envelope"
   if (model %in% c("try-error")) return(model)
   switch(model,
          mvr = {
-           coefs <- function(mdl, ncomp = 10){
-             coef <- cbind(`0 comps` = 0, drop(mdl$coefficients)[, 1:ncomp])
-             coef <- melt(coef)
-             coef <- within(coef, Var2 <- as.numeric(gsub(' comps', '', Var2)))
-             names(coef) <- c('var', 'ncomp', 'beta')
-             return(coef)
-           }
+             coefs <- function(mdl, ncomp = 10){
+                 coef <- cbind(`0 comps` = 0, drop(mdl$coefficients)[, 1:ncomp])
+                 coef <- melt(coef)
+                 coef <- within(coef, Var2 <- as.numeric(gsub(' comps', '', Var2)))
+                 names(coef) <- c('var', 'ncomp', 'beta')
+                 return(coef)
+             }
          },
          envelope = {
-           coefs <- function(mdl, ncomp = ncomp){
-             coef <- melt(cbind(0, sapply(mdl, function(obj) obj$beta)))
-             names(coef) <- c('var', 'ncomp', 'beta')
-             coef$ncomp <- coef$ncomp - 1
-             return(coef)
-           }
+             coefs <- function(mdl, ncomp = ncomp){
+                 coef <- melt(cbind(0, sapply(mdl, function(obj) obj$beta)))
+                 names(coef) <- c('var', 'ncomp', 'beta')
+                 coef$ncomp <- coef$ncomp - 1
+                 return(coef)
+             }
          },
-         linear = {
-           coefs <- function(mdl){
-             coef <- cbind(0, coef(mdl)[-1])
-             coef <- melt(coef)
-             names(coef) <- c('var', 'ncomp', 'beta')
-             coef$ncomp <- coef$ncomp - 1
-             coef$var <- as.numeric(gsub("x", "", coef$var))
-             return(coef)
-           }
+         ols = {
+             coefs <- function(mdl){
+                 coef <- cbind(0, coef(mdl)[-1])
+                 coef <- melt(coef)
+                 names(coef) <- c('var', 'ncomp', 'beta')
+                 coef$ncomp <- coef$ncomp - 1
+                 coef$var <- as.numeric(gsub("x", "", coef$var))
+                 return(coef)
+             }
          },
          bayes = {
-           coefs <- function(mdl, start = 500, stop = NULL){
-             coef <- melt(cbind(0, sapply(mdl, function(obj) {
-               estimate.BayesPLS(
-                 obj, start = start, stop = stop
-               )$coef
-             })))
-             names(coef) <- c('var', 'ncomp', 'beta')
-             coef$ncomp <- coef$ncomp - 1
-             # coef$ncomp[coef$ncomp == 1] <- dim(mdl$gamma$solu)[2]
-             return(coef)
-           }
+             coefs <- function(mdl, start = 500, stop = NULL){
+                 coef <- melt(cbind(0, sapply(mdl, function(obj) {
+                     estimate.BayesPLS(
+                         obj, start = start, stop = stop
+                     )$coef
+                 })))
+                 names(coef) <- c('var', 'ncomp', 'beta')
+                 coef$ncomp <- coef$ncomp - 1
+                 return(coef)
+             }
          }
-  )
+         )
   return(coefs)
 }
 
+## ---- Mean Sum of square of Prediction ----------------------------
+msep <- function(true, predicted) mean((true - predicted) ^ 2)
+
+## ---- Prediction Error -----------------------------------------------
+get_pred_error <- function(sim_obj, fit_obj, model_name){
+    require(data.table)
+    train <- data.frame(x = I(sim_obj$X), y = I(sim_obj$Y))
+    test <- data.frame(x = I(sim_obj$TESTX), y = I(sim_obj$TESTY))
+    beta_fun <- get_beta(model_name)
+    beta_df <- data.table(beta_fun(fit_obj))
+    pred_err <- beta_df[,.(
+        train_err =  msep(c(beta %*% t(train$x)), c(train$y)),
+        test_err =  msep(c(beta %*% t(test$x)), c(test$y))
+    ), by = ncomp]
+    return(pred_err)
+}
+
+## ---- Estimation Error -----------------------------------------------
+get_beta_error <- function(sim_obj, fit_obj, model_name){
+    require(data.table)
+    true_beta <- sim_obj$beta
+    est_beta <- data.table(get_beta(model_name)(fit_obj))
+    beta_err <- est_beta[, msep(true_beta, beta), by = .(ncomp)]
+    setnames(beta_err, "V1", "beta_error")
+    return(beta_err)
+}

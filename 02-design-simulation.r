@@ -33,6 +33,6 @@ load_if_not(
         setnames(sim_obj, c(".id", "V1"), c("design", "obj"))
         sim_obj[, rep := 1:.N, by = "design"]
         setcolorder(sim_obj, c(1, 3, 2))
+        setkeyv(sim_obj, c("design", "rep"))
     })
 )
-

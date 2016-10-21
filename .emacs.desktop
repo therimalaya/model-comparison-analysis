@@ -1,0 +1,63 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Fri Oct 21 12:17:38 2016
+;; Desktop file format version 206
+;; Emacs version 24.5.1
+
+;; Global section:
+(setq desktop-saved-frameset [frameset 1 (22537 60226 266785 0) (desktop . "206") "rajurim@MacNMBU.local" nil nil ((((font-backend mac-ct ns) (fontsize . 0) (font . "-*-Source Code Pro-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1") (border-width . 0) (internal-border-width . 2) (vertical-scroll-bars) (foreground-color . "#CEDBE7") (background-color . "#000000") (line-spacing) (left-fringe . 8) (right-fringe . 8) (menu-bar-lines . 0) (tool-bar-lines . 0) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 0) (alpha) (fullscreen . fullboth) (horizontal-scroll-bars . t) (display-type . color) (background-mode . dark) (cursor-color . "#f8f8f2") (environment) (maximized) (frameset--id . "775E-A82A-4D41-1118") (frameset--mini t . t) (modeline . t) (minibuffer . t) (unsplittable) (right-divider-width . 0) (bottom-divider-width . 0) (icon-name) (display . "MacNMBU.local") (explicit-name) (tool-bar-position . top) (visibility . t) (height . 66) (width . 237) (left + -1920) (top + -147)) ((min-height . 4) (min-width . 30) (min-height-ignore . 2) (min-width-ignore . 12) (min-height-safe . 1) (min-width-safe . 6) (min-pixel-height . 72) (min-pixel-width . 240) (min-pixel-height-ignore . 36) (min-pixel-width-ignore . 96) (min-pixel-height-safe . 18) (min-pixel-width-safe . 48)) hc (pixel-width . 1916) (pixel-height . 1178) (total-width . 240) (total-height . 65) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 304) (pixel-height . 1178) (total-width . 38) (total-height . 65) (normal-height . 1.0) (normal-width . 0.1585365853658537) (buffer "ModelComparison" (selected) (hscroll . 0) (fringes 8 8 nil) (margins nil) (scroll-bars 0 0 nil nil) (vscroll . 0) (dedicated . t) (point . 1147) (start . 1))) (leaf (pixel-width . 804) (pixel-height . 1178) (total-width . 101) (total-height . 65) (normal-height . 1.0) (normal-width . 0.42073170731707316) (buffer "03-model-fitting.r" (selected . t) (hscroll . 0) (fringes 8 8 nil) (margins nil) (scroll-bars 0 0 t nil) (vscroll . 0) (dedicated) (point . 1) (start . 1))) (leaf (last . t) (pixel-width . 808) (pixel-height . 1178) (total-width . 101) (total-height . 65) (normal-height . 1.0) (normal-width . 0.42073170731707316) (buffer "*R*" (selected) (hscroll . 0) (fringes 8 8 nil) (margins nil) (scroll-bars 0 0 t nil) (vscroll . 0) (dedicated . t) (point . 701) (start . 1)))))])
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring nil)
+(setq regexp-search-ring nil)
+(setq register-alist nil)
+(setq file-name-history nil)
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 206
+  "/Users/rajurim/Dropbox/RSpace/ModelComparison/03-model-fitting.r"
+  "03-model-fitting.r"
+  'ess-mode
+  '(visual-line-mode eldoc-mode override-global-mode helm-mode autopair-mode auto-complete-mode auto-indent-mode which-key-mode)
+  1
+  '(1318 nil)
+  nil
+  nil
+  '((indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (truncate-lines)))
+
+(desktop-create-buffer 206
+  "/Users/rajurim/Dropbox/RSpace/ModelComparison/04-prediction-error.r"
+  "04-prediction-error.r"
+  'ess-mode
+  '(visual-line-mode eldoc-mode override-global-mode helm-mode autopair-mode auto-complete-mode auto-indent-mode which-key-mode)
+  61
+  '(nil nil)
+  nil
+  nil
+  '((indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (truncate-lines)))
+
+(desktop-create-buffer 206
+  nil
+  "ModelComparison"
+  'dired-mode
+  '(visual-line-mode override-global-mode helm-mode auto-revert-mode which-key-mode dedicated-mode)
+  1147
+  '(nil nil)
+  t
+  '("/Users/rajurim/Dropbox/RSpace/ModelComparison/")
+  '((truncate-lines)))
+
+(desktop-create-buffer 206
+  "/Users/rajurim/Dropbox/RSpace/ModelComparison/function.r"
+  "function.r"
+  'ess-mode
+  '(visual-line-mode eldoc-mode override-global-mode helm-mode autopair-mode auto-complete-mode auto-indent-mode which-key-mode)
+  676
+  '(nil nil)
+  nil
+  nil
+  '((indent-tabs-mode) (buffer-file-coding-system . undecided-unix) (truncate-lines)))
+
