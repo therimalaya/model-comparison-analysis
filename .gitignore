@@ -3,3 +3,5 @@
 .RData
 *~
 robj/
+/robj-bak/bayes_fit_2.rds
+/robj-bak
