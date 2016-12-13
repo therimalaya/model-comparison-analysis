@@ -24,6 +24,7 @@ design_parm <- lapply(design_parm, parseText)
 design <- expand.grid(design_parm)
 design$q <- design$p
 design <- data.table(design)
+
 design_all <- copy(design)
 design <- design[c(1, 28)]
 

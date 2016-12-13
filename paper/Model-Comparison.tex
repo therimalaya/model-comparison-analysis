@@ -1,19 +1,36 @@
 \documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
 \usepackage{amsmath}
 \usepackage{bm}
 \usepackage{graphics}
-%\usepackage[default]{cantarell}
-% \usepackage[sfdefault,light]{roboto}
-% \usepackage[default,osfigures,scale=0.95]{opensans}
+\usepackage[usenames, dvipsnames]{xcolor}
+
 \usepackage{mathpazo}
-\usepackage[T1]{fontenc}
 \usepackage{geometry}
 \usepackage{setspace}
+
+\usepackage[colorlinks=true]{hyperref}
+\newcommand\myshade{100}
+\colorlet{myblue}{NavyBlue}
+\colorlet{mybrown}{OrangeRed}
+\colorlet{mygreen}{ForestGreen}
+
+\hypersetup{
+  linkcolor  = mybrown!\myshade!black,
+  citecolor  = myblue!\myshade!black,
+  urlcolor   = mygreen!\myshade!black,
+  colorlinks = true,
+}
+
+\usepackage[round]{natbib}
+\bibliographystyle{apalike}
 
 \begin{document}
 
 \title{Model and estimators for partial least squares.\\
-Running title: Model and estimators for PLS.}
+  Running title: Model and estimators for PLS.}
 
 \author{Helland, I.S., University of Oslo,  S\ae b\o , S., Alm\o y, T.  and Rimal, R.,\\
 Norwegian University of Life Sciences}
@@ -27,14 +44,11 @@ Norwegian University of Life Sciences}
 \onehalfspacing
 \section{Introduction}
 
-Supervised learning from multivariate data is a central problem area in applied statistics. Specifically, let our task be to predict a single variable $y$ from a 
-$p$-dimensional  variable $\bm{x}$, having data on $n$ units. A large number of learning methods are discussed in Hastie et al (2009), mainly under the ordinary multiple regression model. It is part of the philosophy of the present paper that for near collinear data, a \emph{reduction} of the regression model is called for.
+Supervised learning from multivariate data is a central problem area in applied statistics. Specifically, let our task be to predict a single variable $y$ from a $p$-dimensional  variable $\bm{x}$, having data on $n$ units. A large number of learning methods are discussed in \citet{hastie2009elements}, mainly under the ordinary multiple regression model. It is part of the philosophy of the present paper that for near collinear data, a \emph{reduction} of the regression model is called for.
 
-Here we will take as our point of departure 
-a well defined reduction of the random $\bm{x}$ regression model, the envelope model of Cook et al (2013). In op. cit. it has been shown in detail that the envelope model in the case of reduction in the $\bm{x}$-variable is 
-equivalent to the partial least square population model of Helland (1990), and that a corresponding result is also valid in the case of a multivariate $\bm{y}$. 
+Here we will take as our point of departure a well defined reduction of the random $\bm{x}$ regression model, the envelope model of \citet{cook2013envelopes} Cook et al (2013). In op. cit. it has been shown in detail that the envelope model in the case of reduction in the $\bm{x}$-variable is equivalent to the partial least square population model of \citet{helland1990partial} Helland (1990), and that a corresponding result is also valid in the case of a multivariate $\bm{y}$. 
 
-Partial least squares (PLS) regression has had a vigorous devolopment in the chemometric literature since it was proposed by Herman and Svante Wold and by Harald Martens (Wold et al, 1984; Martens \& N\ae s, 1992). The method has been extended in several directions and its applications have been expanded to an increasing number of fields, for instance genomic data (Boulesteix \& Strimmer, 2006). Both these issues have been discussed in detail in a recent paper by Mehmood and Ahmed (2015), where a wealth of further references may be found.
+Partial least squares (PLS) regression has had a vigorous devolopment in the chemometric literature since it was proposed by  Herman and Svante Wold and by Harald Martens \citep{wold1984collinearity, martens1992multivariate} (Wold et al, 1984; Martens \& N\ae s, 1992). The method has been extended in several directions and its applications have been expanded to an increasing number of fields, for instance genomic data (Boulesteix \& Strimmer, 2006). Both these issues have been discussed in detail in a recent paper by Mehmood and Ahmed (2015), where a wealth of further references may be found.
 
 In the beginning the PLS method was to some extent neglected or turned down by statisticians (an exception among others was Frank \& Friedman, 1993), but it is now included as a tool among other biased regression methods by applied statisticians. For a general discussion paper with contributions both from mathematical statisticians and chemometricians, see Sundberg (1999).
 
@@ -321,7 +335,7 @@ Trygve?
 
 \section{Discussion}
 
-There is a vast literature on applications of PLS, not only in chemistry, but in a large number of applied fields; see for instance Boulesteix \& Strimmer (2006). Many further references are given in Mehmoood and Ahmed (2015).
+There is a vast literature on applications of PLS, not only in chemistry, but in a large number of applied fields; see for instance Boulesteix \& Strimmer (2006). Many further references are given in \citet{mehmood2016diversity} Mehmoood and Ahmed (2015).
 
 Sometimes the issue is prediction, but very often one also see interpretations of scoring plots, loading plots and correlation plots; see for instance Martens \& Martens (2001). Such plots are not unfamiliar to statisticians in principal component connections, but they are much more used by the chemometric society and many scientists find them informative. They are plots of the sample variants of the latent variables and parameters defined by (\ref{wt}), (\ref{pq}) and (\ref{latent}), and thus involve consistent estimates of these quantities when $n\rightarrow\infty$ and probably also in the more general case $p/n\rightarrow 0$.
 
@@ -329,9 +343,10 @@ By comparison there are relatively few papers by mathematical statisticians inve
 
 The purpose of the present article has been to discuss the approach to PLR-regression via model reduction in the random $\bm{x}$ multiple regression model, and to compare estimators in this reduced model....(The rest depends on the results of the simulations.)
 
+\bibliography{references}
 
+\section{Old References}
 
-\section*{References}
 \begin{description}
 
 \item[] Boulesteix, A.-L. \& Strimmer, K. (2006). Partial least squares: a versatile tool for the analysis of high-dimensional genomic data. \textit{Brief. Bioinf.} \textbf{7}, 32-44.

@@ -6,6 +6,17 @@ parseText <- function(x) {
   return(out[[1]])
 }
 
+## ---- Get Design Label for Plots --------------------------
+design_label <- function(design_table, var.list = NULL){
+  if (!is.null(var.list))
+    design_table <- design_table[, var.list, with = F]
+  rownames(design_table) <- NULL
+  out <- data.table(t(design_table[, sapply(1:.N, function(x){
+    c(design = x, label = paste(capture.output(design_table[x]), collapse = "\n"))
+  })]))
+  out[, design := as.numeric(design)][]
+}
+
 ## ---- Simulation Function -----------------------------------------------
 sim_rep <- function(design_parm, nrep = 5, min_lambda = 1e-4, ntest = 5000){
   design_parm <- append(
@@ -121,6 +132,7 @@ get_beta <- function(model = c('pcr', 'pls', 'cppls', 'mvr', 'envelope', 'bayes'
          },
          bayes = {
            coefs <- function(mdl, start = 500, stop = NULL){
+             if("try-error" %in% class(mdl)) return(NA)
              coef <- melt(cbind(0, sapply(mdl, function(obj) {
                if(any(is.na(obj))) return(NA)
                estimate.BayesPLS(
