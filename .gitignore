@@ -10,3 +10,5 @@ robj/
 *.blg
 *.log
 *.out
+/.dropbox
+*Icon*

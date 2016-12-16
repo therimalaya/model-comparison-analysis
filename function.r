@@ -14,7 +14,8 @@ design_label <- function(design_table, var.list = NULL){
   out <- data.table(t(design_table[, sapply(1:.N, function(x){
     c(design = x, label = paste(capture.output(design_table[x]), collapse = "\n"))
   })]))
-  out[, design := as.numeric(design)][]
+  out[, design := as.numeric(design)]
+  return(out[, Model := NA])
 }
 
 ## ---- Simulation Function -----------------------------------------------
