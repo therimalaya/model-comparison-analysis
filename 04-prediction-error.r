@@ -4,7 +4,7 @@ load_if_not("fit_obj", "robj", expression(source("03-model-fitting.r")))
 load_if_not("fit_obj_all", "robj-bak", expression(source("03a-model-fitting-all.r")))
 
 ## ---- Code for Prediction Error for different model -----
-mdls <- opt$mdls[c(1, 3, 5, 6)]
+mdls <- opt$mdls[c(1, 3, 5)]
 
 ## ---- Prediction Error for all Design --------------------------
 fit_obj_all <- fit_obj_all[lapply(bayes, class) == "try-error", bayes := list(NA)]

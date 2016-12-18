@@ -41,6 +41,7 @@ PE_plt <-
             aes(label = label), x = 10, y = 0.9, hjust = 1,
             show.legend = FALSE, family = "mono", color = "black") +
   scale_color_brewer(palette = "Set1")
+
 ggsave(PE_plt, file = "pdf/prediction_error.pdf", width = 9, height = 4)
 
 ## ---- Prediction Error Plot for all designs --------------------------
@@ -64,6 +65,7 @@ PE_plt_all <-
             show.legend = FALSE, family = "mono",
             color = "black") +
   scale_color_brewer(palette = "Set1")
+
 ggsave(PE_plt_all, file = "pdf/prediction-error-all.pdf", width = 10, height = 15)
 
 

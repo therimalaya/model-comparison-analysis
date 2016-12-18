@@ -5,7 +5,7 @@ source("01-setup.r")
 opt <- list(
   mdls = c("ols", "pcr", "pls", "cppls", "envelope", "bayes"),
   ncomp = 10,
-  nsim = 15,
+  nsim = 5,
   ntest = 5000,
   nsim_all = 5
 )

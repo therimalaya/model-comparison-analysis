@@ -24,8 +24,8 @@ sim_rep <- function(design_parm, nrep = 5, min_lambda = 1e-4, ntest = 5000){
     design_parm,
     c(lambda.min = min_lambda, ntest = ntest)
   )
+  set.seed(7777)
   sim_obj <- lapply(1:nrep, function(x){
-    set.seed(7777)
     do.call(simrel, design_parm)
   })
   return(sim_obj)
@@ -77,7 +77,7 @@ bayes_fit <- function(sim_obj, ncomp = 2, ...){
   fit <- list()
   for(nc in 1:ncomp){
     fit[[nc]] <- with(train, {
-      BayesPLS(y, x, ncomp = ncomp, ...)
+      BayesPLS(y, x, ncomp = nc, ...)
     })
   }
   return(fit)

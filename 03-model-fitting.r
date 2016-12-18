@@ -46,7 +46,7 @@ load_if_not(
         bayes_fit(obj, ncomp = 10, scale = FALSE,
                   dotrace = FALSE, totiter = 50000, freeze = 0.01,
                   compreduce = FALSE, thin = 50, burn = 5000)
-      })
+      }, mc.cores = 5)
     })    
   })
 )
@@ -59,7 +59,12 @@ fit_obj <- sim_obj[
     bind_obj(env_obj)][
       bind_obj(ols_obj)][
         bayes_dt]
-setnames(fit_obj, names(fit_obj), c('design', 'rep', 'sim_obj', 'pls', 'envelope', 'ols', 'bayes'))
+
+setnames(fit_obj, names(fit_obj),
+         c('design', 'rep', 'sim_obj',
+           'pls', 'envelope', 'ols',
+           'bayes'
+           ))
 
 ## ---- Saving Fit-Obj --------------------------
 saveRDS(fit_obj, file = "robj/fit-obj.rds")
