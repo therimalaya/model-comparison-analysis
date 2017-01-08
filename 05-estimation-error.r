@@ -1,7 +1,6 @@
 source("01-setup.r")
 source("02-design-simulation.r")
 load_if_not("fit_obj", "robj", expression(source("03-model-fitting.r")))
-load_if_not("fit_obj_all", "robj-bak", expression(source("03a-model-fitting-all.r")))
 
 ## ---- Estimation error for all the models --------------------------
 mdls <- c("pls", "envelope", "ols")

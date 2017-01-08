@@ -25,10 +25,7 @@ design <- expand.grid(design_parm)
 design$q <- design$p
 design <- data.table(design)
 
-design_all <- copy(design)
-design <- design[c(1, 28)]
-
-## ----simulation------------------------------------------------------
+## ----complete-simulation------------------------------------------------------
 load_if_not(
   obj_name = "sim_obj",
   obj_path = "robj",
@@ -39,21 +36,6 @@ load_if_not(
     sim_obj[, rep := 1:.N, by = "design"]
     setcolorder(sim_obj, c(1, 3, 2))
     setkeyv(sim_obj, c("design", "rep"))
-  })
-)
-
-## ----complete-simulation------------------------------------------------------
-opt$nsim_all <- 5
-load_if_not(
-  obj_name = "sim_obj_all",
-  obj_path = "robj-bak",
-  expression = expression({
-    sim_obj_all <- apply(design_all, 1, sim_rep, nrep = opt$nsim_all)
-    sim_obj_all <- rbindlist(lapply(sim_obj_all, data.table), idcol = TRUE)
-    setnames(sim_obj_all, c(".id", "V1"), c("design", "obj"))
-    sim_obj_all[, rep := 1:.N, by = "design"]
-    setcolorder(sim_obj_all, c(1, 3, 2))
-    setkeyv(sim_obj_all, c("design", "rep"))
   })
 )
 

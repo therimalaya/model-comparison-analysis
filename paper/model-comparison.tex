@@ -44,7 +44,7 @@
 \section{Introduction}
 
 Supervised learning from multivariate data is a central problem area in applied
-statistics. Specifically, let our task be to predict a single variable $y$ from
+statistics. Specifically, let our task be to predict a sinwidtgle variable $y$ from
 a $p$-dimensional variable $\bm{x}$, having data on $n$ units. A large number of
 learning methods are discussed in \citet{hastie2009elements}, mainly under the
 ordinary multiple regression model. It is part of the philosophy of the present
@@ -368,7 +368,6 @@ Assume that (\ref{weight}) holds for $A=m$ and $\widehat{\bm{w}}_{m+1}=\bm{0}$. 
 \end{proof}
 
 \section{The Bayes estimator}
-
 In \citet{helland2012near} a Bayes estimator under the PLS model was developed. The estimation was performed by a Markov Chain Monte Carlo approach. Specifically, for given $m$, and for observed centered data $\bm{y}$ and $\bm{X}$ the likelihood function is proportional to
 
 \begin{equation}
@@ -391,21 +390,21 @@ modified scale priors are also chosen for $\bm{\nu}$ as $\pi(\bm{\nu}) =\prod_i
 
 From simulations, the Bayes estimator under the PLS model seems to have very good properties; see Figure... (Solve: Kan du plukke ut den \o verste delfiguren av Figure 1 i Bayes-PLS artikkelen?).
 
-\begin{figure}[H]
-  \label{fig:est_pred_plot}
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{../pdf/msep-sigma-plot.pdf}
-    \caption{MSEP based on 5,000 test samples}
-    \label{fig:msep}
-  \end{subfigure}
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{../pdf/est-error-plot.pdf}
-    \caption{MSE of estimated coefficients ($\hat{\beta}$)}
-    \label{fig:mse_beta}
-  \end{subfigure}
-  \caption{Comparison of Bayes, envelope(MLE) and PLS estimates on the basis of
-    prediction error and estimation error}
-\end{figure}
+% \begin{figure}[H]
+%   \label{fig:est_pred_plot}
+%   \begin{subfigure}[b]{0.5\textwidth}
+%     \includegraphics[width=\textwidth]{../pdf/msep-sigma-plot.pdf}
+%     \caption{MSEP based on 5,000 test samples}
+%     \label{fig:msep}
+%   \end{subfigure}
+%   \begin{subfigure}[b]{0.5\textwidth}
+%     \includegraphics[width=\textwidth]{../pdf/est-error-plot.pdf}
+%     \caption{MSE of estimated coefficients ($\hat{\beta}$)}
+%     \label{fig:mse_beta}
+%   \end{subfigure}
+%   \caption{Comparison of Bayes, envelope(MLE) and PLS estimates on the basis of
+%     prediction error and estimation error}
+% \end{figure}
 
 u Typically, MSEP is lower than that for PLS. A particularly desirable feature of Bayes-PLS is that the MSEP-curve seems to be almost flat for small values of. Thus the error made by choosing a wrong number of components $m$ by crossvalidation must be expected to be small if $m$ is relatively small.
 
@@ -413,30 +412,37 @@ The less desirable featurs of Bayes-PLS is that it requires very heavy computati
 
 \section{Data Simulations for model comparison}
 
-An empirical comparison of these models are made using simulated linear model
-data. The data is simulated using {\tt simrel} r-package
-\citep{saebo2015simrel}. The simulations with {\tt simrel} is based on the
-underlying latent structure parameters where one can specify several properties
-such as decaying factor of eigenvalues, position of relevant components and
-coefficients of determinations.
+An empirical comparison of these models is conducted based on their ability to
+predict test samples. Since, these estimation methods are based on latent
+structure, data with diverse properties of latent structure is necessary. For
+the simulation of such data, an r-package {\tt simrel} is used. {\tt simrel} is
+a simulation tool that can simulate linear model data based on the properties of
+latent structure. Apart from the tool, a parameter setup is designed from the
+combination of following parameters.
 
-\setlength{\itemsep}{0mm}\setlength{\parskip}{0mm}
-\begin{description}
-\item[{\tt n:}] 50
-\item[{\tt p:} ] 15 and 40
-\item[{\tt R2:} ] 0.5 and 0.9
-\item[{\tt relpos:} ] \hfill
-  \begin{itemize}[label=$\triangleright$]
-  \item 1 and 2
-  \item 1 and 3
-  \item 2 and 3
-  \item 1, 2 and 3
-  \end{itemize}
-\item[{\tt gamma:} ] 0.5 and 0.9
-\end{description}
+\bigskip
 
+\begin{tabular}{rll}
+  Number of training samples       & {\tt n}     & 50 \\
+  Number of predictor variables    & {\tt p}     & 15 and 40 \\
+  Coefficient of variation         & {\tt R2}    & 0.5 and 0.9 \\
+  Position of relevant components  & {\tt relpos}
+                                   & $\triangleright$ 1, 2 \;           
+                                    $\triangleright$ 1,  3 \; \newline  
+                                    $\triangleright$ 2,  3 and \;       
+                                    $\triangleright$ 1,  2, 3 \\        
+  Decay factor of eigenvalues of X & {\tt gamma} & 0.5 and 0.9
+\end{tabular}
 
+\bigskip
+ 
 
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=\textwidth]{../pdf/design-plot}
+%   \caption{Simulation Design}
+%   \label{fig:design}
+% \end{figure}
 
 \section{Systematic comparisons}
 
@@ -464,91 +470,6 @@ The purpose of the present article has been to discuss the approach to PLR-regre
 
 \bibliography{references}
 
-% \section{Old References}
-
-% \begin{description}
-
-% \item[] Boulesteix, A.-L. \& Strimmer, K. (2006). Partial least squares: a versatile tool for the analysis of high-dimensional genomic data. \textit{Brief. Bioinf.} \textbf{7}, 32-44.
-
-% \item[] Butler, N.A. \& Denham, M.C. (2000). The peculiar shrinkage proprties of partial least squares regression. \textit{J. Roy. Statist. Soc.} B \textbf{62}, 585-593.
-
-% \item[] Chun, H. \& Keles, S. (2010). Sparse partial least squares regression for simultaneous dimension reduction and variable selection. \textit{J. R. Statist. Soc.} B \textbf{72}, 3-25.
-
-% \item[] Cook, R.D., Li, B. \& Chiaromonte, F. (2010). Envelope models for parsimonious and efficient multivariate linear regression. \textit{Statistica Sinica} \textbf{20}, 927-1010.
-
-% \item[] Cook, R.D., Helland, I.S. \& Su, Z. (2013). Envelopes and partial least squares regression.  \textit{J. Roy. Statist. Soc.} B \textbf{75}, 851-877.
-
-% \item[] Cook, R.D., Su, Z. \& Yang, Y. (2014). envip: A MATLAB toolbox for computing envelope estimators in multivariate analysis. \textit{J. Statist. Software} \textbf{62} (8), 1-20.
-
-% \item[] Cook, R.D. \& Zhang, X. (2015a). Simultaneous envelopes for multivariate linear regression. \textit{Technometrics} \textbf{57}, 11-25.
-
-% \item[] Cook, R.D. \& Zhang, X. (2015b). Foundations for envelope models and methods. \textit{J. Am. Statist. Ass.} \textbf{110}, 599-611.
-
-% \item[] Cook, R.D. \& Zhang, X. (2016). Algorithms for envelope estimation. \textit{J. Computaional and Graphical Statistics} \textbf{25}, 284-300.
-
-% \item[] Cook, R.D., Forzani, L. \& Su, Z. (2016). A note on fast envelope estimation. Manuscript.
-
-% \item[] Foschi, P. (2015). The geometry of PLS shrinkage. Manuscript.
-
-% \item[] Frank, I.E. \& Friedman, J.H. (1993). A statistical view of some chemometrics tools. \textit{Technometrics} \textbf{35}, 109-135.
-
-% \item[] Garthwaite, P.G. (1994). An interpretation of partial least squares. \textit{J. Amer. Statist. Ass.} \textbf{89}, 122-127.
-
-% \item[] Hastie, T., Tibshirani, R. \& Friedman, J. (2009). \textit{The Elements of Statistical Learning. Data Mining, Inference, and Prediction.} Springer Series in Statistics.
-
-
-% \item[] Helland, I.S. (1988). On the structure of partial least squares regression. \textit{Commun. Statist. -Simula.,} \textbf{17}, 581-607.
-
-% \item[] Helland, I.S. (1990). Partial least squares regression and statistical models. \textit{Scand. J. Statist.} \textbf{17}, 97-114.
-
-% \item[] Helland, I.S. (2000). Model reduction for prediction in regression models. \textit{Scand. J. Statist.} \textbf{27}, 1-20.
-
-% \item[] Helland, I.S. (2001a). Some theoretical aspects of partial least squares regression. \textit{Chemometrics and Intelligent Laboratory Systems} 
-%   \textbf{58}, 97-107.
-
-% \item[] Helland, I.S. (2001b). Reduction of regression models under symmetry. \textit{Contemporary Mathematics} \textbf{287}, 139-153.
-
-% \item[] Helland, I.S. (2004). Statistical inference under symmetry. \textit{Intern. Statist. Review} \textbf{72}, 409-422.
-
-% \item[] Helland, I.S. (2010). \textit{Steps Towards a Unified Basis in Scientific Models and Methods.} Singapore: World Scientific.
-
-% \item[] Helland, I.S. \& Alm\o y, T. (1994). Comparison of prediction methods when only a few components are relevant. \textit{J. Am. Statist. Ass.} \textbf{89}, 583-591.
-  
-% \item[] Helland, I.S., S\ae b\o , S. \& Tjelmeland, H. (2012). Near optimal prediction from relevant components. \textit{Scand. J. Statist.} \textbf{39}, 
-%   695-713.
-
-% \item[] Kr\"{a}mer, N. (2007). An overview on the shrinkage properties of partial least squares regression. \textit{Comput. Statist.} \textbf{22}, 249-273.
-
-% \item[] Kr\"{a}mer, N. \& Sugiyama, M. (2011). The degrees of freedom of partial least squares regression. \textit{J. Am. Statist. Ass.} \textbf{106}, 697-705.
-
-% \item[] Lingj\ae rde, O.C. \& Christophersen, N. (2000). Shrinkage structure of partial least squares. \textit{Scand. J. Statist.} \textbf{27}, 459-473.
-
-% \item[] Martens, H. \& Martens, M. (2001). \textit{Multivariate Analysis of Quality: An Introduction.} Chichester: Wiley.
-
-% \item[] Martens, H. \& N\ae s, T. (1992). \textit{Multivariate Calibration.} Chichester: Wiley.
-
-% \item[] McCullagh, P. (2002). What is a statistical model? With discussion. \textit{Ann. Statist.} \textbf{30}, 1235-1310.
-
-% \item[] Mehmood, T. \& Ahmed, B. (2015). The diversity in the applications of partial least squares: an overview. \textit{J. Chemometrics} DOI: 10.1002/cem.2762
-
-% \item[] Munck, L. ......(2010). Trygve: N\o yaktig referanse.
-
-% \item[] Naik, P. \& Tsai, C.-L. (2000). Partial least squares estimator for single-index models. \textit{J. R. Statist. Soc.} B \textbf{62}, 763-771.
-
-% \item[] N\ae s, T. \& Helland, I.S. (1993). Relevant components in regression. \textit{Scand. J. Statist.} \textbf{20}, 239-250.
-
-% \item[] Stoica, P. \& Soderstorom (1998). Partial least squares: a first order analysis. \textit{Scand. J. Statist.} \textbf{25}, 17-24.
-
-% \item[] Stone, M. \& Brooks, R.J. (1990). Continuum regression: cross-validated sequentially constructed prediction embracing ordinary least squares, partial least squares and principal component regression (with discussion). \textit{J. R. Statist. Soc.} B \textbf{52}, 237-269.
-
-% \item[] Sundberg, R. (1999). Multivariate calibration - direct and indirect regression methodology. With discussion. \textit{Scand. J. Statist.} \textbf{26}, 161-207.
-
-% \item[] S\ae b\o , S., Alm\o y, T. \& Helland, I.S. (2015). A versatile tool for linear model comparison based on the concept of a relevant subspace and relevant predictors. \textit{Chemometrics and Intelligent Laboratory Systems} \textbf{146}, 128-135.
-
-% \item[] Wold, S., Ruhe, A., Wold, H. \& Dunn, W.J. (1984). The collinearity problem in linear regression. The partial least squares (PLS) approach to generalized inverses. \textit{SIAM Journal on Scientific and Statistical Computing} \textbf{5}, 735-743.
-
-
-% \end{description}
 \bigskip
 
 \ \\

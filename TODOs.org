@@ -1,0 +1,14 @@
+* Model Comparison
+** Data Analysis
+*** TODO Model Fittings
+    Finish up the Bayes Model fittings and collect them together in a list.
+*** TODO Plotting
+    Make the prediction error plot and estimation error plot. Also try to make a plot as in Bayes Paper by solve.
+** Paper Writing
+*** TODO About ~simrel~
+    Write something about ~simrel~ and Design under study
+*** TODO Interpretation
+    Describe and interpret plots under the heading of results
+*** TODO Comparison Conclusion
+    Make some conclusion for different models
+    

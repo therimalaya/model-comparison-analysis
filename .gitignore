@@ -12,3 +12,5 @@ robj/
 *.out
 /.dropbox
 *Icon*
+.DS_Store
+reference-material/

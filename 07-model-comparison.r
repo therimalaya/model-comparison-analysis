@@ -2,8 +2,8 @@
 source("06-plottings.r")
 
 ## ---- Join the test prediction error with design paramters --------------------------
-model_data <- merge(test_err_all[, -"label", with = FALSE],
-                    cbind(design = 1:nrow(design_all), design_all),
+model_data <- merge(test_err[, -"label", with = FALSE],
+                    cbind(design = 1:nrow(design), design),
                     by = "design")
 model_data[, relpos := gsub("[c\\(\\)]", "", as.character(relpos))]
 model_data[, c("p", "R2", "gamma") := list(as.character(p),
