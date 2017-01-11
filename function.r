@@ -10,6 +10,8 @@ parseText <- function(x)
 ## ---- Get Design Label for Plots --------------------------
 design_label <- function(design_table, var.list = NULL)
 {
+  require(data.table)
+  design_table <- as.data.table(design_table)
   if (!is.null(var.list))
     design_table <- design_table[, var.list, with = F]
   rownames(design_table) <- NULL
@@ -86,13 +88,15 @@ fit_bayes <- function(d, r, c, sobj = sim_obj[design == d & rep == r, obj][[1]])
 }
 
 ## ---- Bind list of object into data.table -----------------------------------------------
-bind_obj <- function(obj)
+bind_obj <- function(obj, name = "obj")
 {
-  dt <- rbindlist(lapply(obj, function(x) cbind(1:5, data.table(x))),
-                  idcol=TRUE)
-  setnames(dt, names(dt), c("design", "rep", "obj"))
-  setkeyv(dt, c("design", "rep"))
-  return(dt[])
+  out <- map_df(obj, function(dgn){
+    map_df(dgn, function(rep){
+      data_frame(obj = list(rep))
+    }, .id = "rep")
+  }, .id = "design")
+  names(out) <- c("design", "rep", name)
+  return(out)
 }
 
 ## ---- Beta Function Generator for different Models -----------------------------------------------
@@ -157,7 +161,6 @@ msep <- function(true, predicted) mean((true - predicted) ^ 2)
 ## ---- Prediction Error -----------------------------------------------
 get_pred_error <- function(sim_obj, fit_obj, model_name)
 {
-  require(data.table)
   train <- data.frame(x = I(sim_obj$X), y = I(sim_obj$Y))
   test <- data.frame(x = I(sim_obj$TESTX), y = I(sim_obj$TESTY))
   beta_fun <- get_beta(model_name)
@@ -175,7 +178,7 @@ get_pred_error <- function(sim_obj, fit_obj, model_name)
   })
   pred_err <- unname(cbind(0:(ncol(pe)-1), t(pe)))
   colnames(pred_err) <- c("ncomp", "train_err", "test_err")
-  pred_err <- data.table(pred_err)
+  pred_err <- as.data.frame(pred_err)
   return(pred_err)
 }
 

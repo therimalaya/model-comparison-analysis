@@ -23,7 +23,7 @@ design_parm <- lapply(design_parm, parseText)
 ## ----design------------------------------------------------------
 design <- expand.grid(design_parm)
 design$q <- design$p
-design <- data.table(design)
+design <- as_data_frame(design)
 
 ## ----complete-simulation------------------------------------------------------
 load_if_not(
@@ -31,11 +31,7 @@ load_if_not(
   obj_path = "robj",
   expression = expression({
     sim_obj <- apply(design, 1, sim_rep, nrep = opt$nsim)
-    sim_obj <- rbindlist(lapply(sim_obj, data.table), idcol = TRUE)
-    setnames(sim_obj, c(".id", "V1"), c("design", "obj"))
-    sim_obj[, rep := 1:.N, by = "design"]
-    setcolorder(sim_obj, c(1, 3, 2))
-    setkeyv(sim_obj, c("design", "rep"))
+    sim_obj <- bind_obj(sim_obj, name = "sim_obj")
   })
 )
 
