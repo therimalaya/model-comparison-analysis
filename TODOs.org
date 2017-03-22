@@ -1,4 +1,4 @@
-* Model Comparison
+ * Model Comparison
 ** Data Analysis
 *** TODO Model Fittings
     Finish up the Bayes Model fittings and collect them together in a list.

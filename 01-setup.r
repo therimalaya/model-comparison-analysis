@@ -1,5 +1,5 @@
 ## ----PackageLoading-----------------------------------------------------
-req.pkgs <- c("tidyverse", "simrel", "pls", "envlp",
+req.pkgs <- c("tidyverse", "simrel", "pls", "envlp", "lme4", "lmerTest",
               "BayesPLS", "parallel", "grid", "gridExtra")
 for (pkg in req.pkgs)
 {

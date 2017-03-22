@@ -12,14 +12,19 @@ design_label <- function(design_table, var.list = NULL)
 {
   require(data.table)
   design_table <- as.data.table(design_table)
+  if ("gamma" %in% names(design_table)) {
+    setnames(design_table, "gamma", "eta")
+  }
   if (!is.null(var.list))
-    design_table <- design_table[, var.list, with = F]
+    design_table <- design_table[, c("design", var.list), with = F]
   rownames(design_table) <- NULL
-  out <- data.table(t(design_table[, sapply(1:.N, function(x){
-    c(design = x, label = paste(capture.output(design_table[x]), collapse = "\n"))
-  })]))
-  out[, design := as.numeric(design)]
-  return(out[, Model := NA])
+  out <- sapply(seq.int(nrow(design_table)), function(x){
+    c(design = design_table[x, design], 
+      label = paste(capture.output(design_table[x, -'design']), collapse = "\n"))
+  })
+  out <- data.table(t(out))[, design := as.numeric(design)]
+  out[, c("Method", "Model") := NA]
+  return(as.data.frame(out))
 }
 
 ## ---- Simulation Function -----------------------------------------------
@@ -142,7 +147,7 @@ get_beta <- function(model = c('pcr', 'pls', 'cppls', 'mvr', 'envelope', 'bayes'
            coefs <- function(mdl, start = 500, stop = NULL)
            {
              coef <- lapply(mdl, function(obj) {
-               if(class(obj) != "BayesPLS") return(NA)
+               if (class(obj) != "BayesPLS") return(NA)
                coef <- estimate.BayesPLS(obj, start = start, stop = stop)
                return(c(coef$intercept, coef$coefficients))
              })
@@ -176,7 +181,7 @@ get_pred_error <- function(sim_obj, fit_obj, model_name)
     cbind(train = msep(c(yhat_train), train$y),
           test = (minerr + t(beta - truebeta) %*% sigma %*% (beta - truebeta)) * (n + 1)/n)
   })
-  pred_err <- unname(cbind(0:(ncol(pe)-1), t(pe)))
+  pred_err <- unname(cbind(0:(ncol(pe) - 1), t(pe)))
   colnames(pred_err) <- c("ncomp", "train_err", "test_err")
   pred_err <- as.data.frame(pred_err)
   return(pred_err)
@@ -185,15 +190,14 @@ get_pred_error <- function(sim_obj, fit_obj, model_name)
 ## ---- Estimation Error -----------------------------------------------
 get_beta_error <- function(sim_obj, fit_obj, model_name)
 {
-  require(data.table)
   true_beta <- c(sim_obj$beta0, sim_obj$beta)
   est_beta <- get_beta(model_name)(fit_obj)
   est_beta[1, 1] <- mean(sim_obj$Y)
-  beta_err <- data.table(stack(apply(est_beta, 2, msep, true_beta)))
-  setnames(beta_err, names(beta_err), c("beta_error", "ncomp"))
-  beta_err[, ncomp := as.numeric(gsub("Comp", "", ncomp))]
-  setcolorder(beta_err, 2:1)
-  return(beta_err[])
+  beta_err <- apply(est_beta, 2, msep, true_beta)
+  data.frame(beta_err) %>%
+    remove_rownames %>%
+    rownames_to_column(var = "ncomp") %>%
+    mutate(ncomp = as.numeric(ncomp) - 1)
 }
 
 ## ---- ggplot common legend -----------------
@@ -206,7 +210,7 @@ share_legend <- function(..., ncol = length(list(...)), nrow = 1,
   legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
   lheight <- sum(legend$height)
   lwidth <- sum(legend$width)
-  gl <- lapply(plots, function(x) x + theme(legend.position="none"))
+  gl <- lapply(plots, function(x) x + theme(legend.position = "none"))
   gl <- c(gl, ncol = ncol, nrow = nrow)
 
   combined <- switch(
@@ -222,4 +226,31 @@ share_legend <- function(..., ncol = length(list(...)), nrow = 1,
   )
   grid.newpage()
   grid.draw(combined)
+}
+
+## ---- Prediction Error Plot ----------------------------------------
+.pe_plot <- function(dataset, filter.expr, n.row = 4) {
+  ## Needs lots of variables from global environment,
+  ## This function is just made for handeling internal repetitions
+  dataset <- dataset %>% filter_(filter.expr)
+  design <- design %>% filter_(filter.expr)
+  ggplot(filter(dataset, Method != "ols"),
+         aes(ncomp, MSEP, color = Method)) +
+  geom_point(shape = 4, size = 0.8, na.rm = TRUE) +
+  geom_line() +
+  facet_wrap(~design, label = label_both, nrow = n.row) +
+  theme(legend.position = "top") +
+  geom_hline(data = filter(dataset, Method == "ols", ncomp != 0),
+             aes(yintercept = MSEP, color = Method),
+             linetype = "dashed") +
+  labs(x = "Number of Components",
+       y = "Test Prediction Error (MSEP)") +
+  scale_x_continuous(breaks = 0:10) +
+  geom_text(data = design_label(design, c("p", "R2", "relpos", "eta")),
+            aes(label = label),
+            x = Inf, y = Inf, vjust = 1,
+            hjust = 1, size = rel(3),
+            show.legend = FALSE, family = "mono",
+            color = "black") +
+  scale_color_brewer(palette = "Set1")
 }
